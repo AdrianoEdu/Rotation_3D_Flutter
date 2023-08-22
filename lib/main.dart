@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:model_viewer_plus/model_viewer_plus.dart';
 
 
 void main() {
@@ -31,19 +33,35 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-    int _counter = 0;
-    Offset _offset = Offset.zero; // changed
+  int _counter = 0;
 
-    void _incrementCounter() {
+  Offset _offset = Offset.zero; // changed
+
+  void _incrementCounter() {
+    setState(() {
+      _counter++;
+    });
+  }
+
+  double motionY = 425;
+
+  @override
+  void initState() {
+    Timer.periodic(const Duration(milliseconds: 100), (timer) {
       setState(() {
-        _counter++;
+        motionY -= 5;
+
+        if(motionY == 0) motionY = 425;
       });
-    }
+    });
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black38,
+      backgroundColor: Colors.blueAccent,
       appBar: AppBar(
         title: const Text('Percent Progress Indicator'),
       ),
@@ -62,43 +80,62 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Column(
                     children: [
                       Stack(
                         children: [
-                        Container(
-                          margin: EdgeInsets.only(left: 40.0),
-                          width: 25,
-                          height: 450,
-                          color: Colors.grey,
+                        Positioned(
+                          child: Container(
+                            margin: EdgeInsets.only(left: 40.0),
+                            width: 25,
+                            height: 450,
+                            color: Colors.grey,
+                          ),
                         ),
-                        Container(
-                          margin: EdgeInsets.only(left: 40.0),
-                          width: 25,
+                        Positioned(
                           height: 25,
-                          color: Colors.red,
-                        )
+                          bottom: motionY,
+                          child: Container(
+                            margin: EdgeInsets.only(left: 40.0),
+                            width: 25,
+                            height: 25,
+                            color: Colors.red,
+                          ),
+                        ),
                         ],
                       ),
                     ],
                   ),
-                  Column
-                  (children: [
+                  ModelViewer(src: 'assets/image/scene.glb', autoPlay: true, ),
+                  // Container(
+                  //    width: 200,
+                  //    height: 450,
+                  //    color: Colors.black,
+                  //    child:
+                  // ),
+                  Column (
+                    children: [
                     Stack(
                     children: [
-                      Container(
-                        margin: EdgeInsets.only(right: 40.0),
-                        width: 25,
-                        height: 450,
-                        color: Colors.grey,
+                      Positioned(
+                        child: Container(
+                          margin: EdgeInsets.only(right: 40.0),
+                          width: 25,
+                          height: 450,
+                          color: Colors.grey,
+                        ),
                       ),
-                      Container(
-                        margin: EdgeInsets.only(right: 40.0),
-                        width: 25,
+                      Positioned(
                         height: 25,
-                        color: Colors.red,
+                        bottom: motionY,
+                        child: Container(
+                          margin: EdgeInsets.only(right: 40.0),
+                          width: 25,
+                          height: 25,
+                          color: Colors.red,
+                        ),
                       )
                     ],
                   ),
